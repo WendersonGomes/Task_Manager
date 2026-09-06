@@ -1,139 +1,139 @@
+# Task Manager
 
-# ESIG Projeto - Sistema de Gerenciamento de Tarefas
+Web application for managing tasks, built with Jakarta EE and PostgreSQL.
 
-Aplicação web para **gerenciar tarefas**
+The system supports task registration, editing, filtering, completion tracking, and persistence through JPA.
 
----
+## Features
 
-## Tecnologias Utilizadas
+- Create tasks with:
+  - Number
+  - Title
+  - Description
+  - Assignee
+  - Priority
+  - Status
+  - Deadline
+- List registered tasks.
+- Edit and delete tasks.
+- Mark tasks as completed.
+- Filter tasks by:
+  - Task number
+  - Title
+  - Description
+  - Assignee
+  - Priority
+  - Status
+- Clear tasks by status.
+- Form validation and user-facing error messages.
+- Layered separation between model, service/controller, and view.
+- Dependency injection with CDI.
+- Persistence with JPA and PostgreSQL.
 
-- **Java EE (Jakarta EE)**
-  - JSF (JavaServer Faces)
-  - CDI (Contexts and Dependency Injection)
-  - JPA (Java Persistence API)
-- **Maven** (gerenciador de dependências e build)
-- **PostgreSQL** (banco de dados relacional)
-- **Tomcat 11** (servidor de aplicação)
-- **IntelliJ IDEA**
+## Tech Stack
 
----
-
-## Funcionalidades Implementadas
-
-- Cadastro de tarefas (número, título, descrição, responsável, prioridade, situação, deadline(prazo))
-- Listagem de tarefas em tabela
-- Atualizar (editar) e excluir tarefas
-- Marcar tarefa como concluída
-- Filtros por:
-  - Número da tarefa
-  - Título
-  - Descrição
-  - Responsável
-  - Prioridade
-  - Situação (em andamento ou concluída)
-- Limpar tarefas por status (concluídas, em andamento ou todas)
-- Mensagens de validação e erro com `<h:message>` e `<h:messages>`
-- Layout simples e responsividade minima com CSS (não utilizei PrimeFaces)
-- Separação de responsabilidades (model, service/controller, view)
-- CDI para injeção de dependência
-- JPA com PostgreSQL via `persistence.xml`
-- Arquivos `pom.xml`, `beans.xml` e `web.xml` configurados corretamente
-
----
-
-## Como Executar Localmente
-
-### Requisitos
-
-- Java JDK 21
-- PostgreSQL instalado
-- IntelliJ
-- Apache Tomcat 11
+- Java 21
+- Jakarta EE
+- JSF (JavaServer Faces)
+- CDI
+- JPA / Hibernate
+- PostgreSQL
 - Maven
+- Apache Tomcat 11
+- CSS
 
----
+## Requirements
 
-### 1. Clone o projeto
+Before running the project, install:
 
----
+- JDK 21
+- PostgreSQL
+- Maven
+- Apache Tomcat 11
+- An IDE with Jakarta EE support, such as IntelliJ IDEA
 
-### 2. Criar o banco de dados PostgreSQL
+## Installation
 
-Acesse o PostgreSQL e crie um banco de dados chamado TaskManagerDB (ou o nome que preferir)
+Clone the repository:
 
----
+```bash
+git clone https://github.com/WendersonGomes/TaskManager.git
+cd TaskManager
+```
 
-### 3. Configuração do `persistence.xml`
+## Database Setup
 
-Localize o arquivo:  
-`src/main/resources/META-INF/persistence.xml`  
-E use o seguinte conteúdo (ou confirme que está igual):
+Create a PostgreSQL database, for example:
 
-:warning: Lembre-se de alterar o usuario, senha e nome do banco :warning:
+```text
+TaskManagerDB
+```
+
+Then edit:
+
+```text
+src/main/resources/META-INF/persistence.xml
+```
+
+Configure the JDBC connection for your local environment:
 
 ```xml
-<persistence xmlns="https://jakarta.ee/xml/ns/persistence"
-             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-             xsi:schemaLocation="https://jakarta.ee/xml/ns/persistence https://jakarta.ee/xml/ns/persistence/persistence_3_0.xsd"
-             version="3.0">
+<property
+    name="jakarta.persistence.jdbc.url"
+    value="jdbc:postgresql://localhost:5432/TaskManagerDB"
+/>
 
-  <persistence-unit name="tasksPU">
-    <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-    <class>com.esig.taskmanager.model.Task</class>
-    <properties>
-      <!-- JDBC Configuration -->
-      <property name="jakarta.persistence.jdbc.url" value="jdbc:postgresql://localhost:5432/TaskManagerDB"/> <!-- insira a porta caso seja diferente junto ao nome do banco -->
-      <property name="jakarta.persistence.jdbc.user" value="postgres"/> <!-- insira seu usuario -->
-      <property name="jakarta.persistence.jdbc.password" value="senha"/> <!-- insira sua senha -->
-      <property name="jakarta.persistence.jdbc.driver" value="org.postgresql.Driver"/>
+<property
+    name="jakarta.persistence.jdbc.user"
+    value="postgres"
+/>
 
-      <!-- Hibernate Configuration -->
-      <property name="hibernate.dialect" value="org.hibernate.dialect.PostgreSQLDialect"/>
-      <property name="hibernate.hbm2ddl.auto" value="update"/>
-      <property name="hibernate.show_sql" value="true"/>
-      <property name="hibernate.format_sql" value="true"/>
-    </properties>
-  </persistence-unit>
-</persistence>
+<property
+    name="jakarta.persistence.jdbc.password"
+    value="your-password"
+/>
 ```
 
----
+Do not commit real production credentials.
 
-### 4. Instalar dependências do Maven
+## Build
 
-No IntelliJ:
+Using the Maven Wrapper:
 
-- Clique com o botão direito no `pom.xml` > **"Add as Maven Project"**
-- Abra o painel Maven (View > Tool Windows > Maven) e clique em **refresh**
+### Linux / macOS
 
-**Apenas caso isso não tenho sido feito de maneira automatica**
-
----
-
-### 5. Criar o artifact
-
-1. Vá em **File > Project Struture > Artifacts** > clique no +, Web Application: Exploded
-
-### 6. Configurar o Tomcat
-
-1. Vá em **File > Settings > Build, Execution, Deployment > Application Servers**
-  - Clique no **+**, escolha **Tomcat Server**, e selecione a pasta do Tomcat 11
-2. Vá em **Run > Edit Configurations**
-
-  - Clique no **+ > Tomcat Server > Local**
-  - Em **Before launch**, clique em +, selecione Build Artifacts e TaskManager:war exploded
-  - Em **Deployment**, clique no `+` > **Artifact** > selecione `Tomcat 11.0.7`
-
-3. Clique em **Apply** e depois em **Run**
-
----
-
-### 6. Acessar a aplicação
-
-Após iniciar o Tomcat, acesse:
-
-```
- http://localhost:8080/TaskManager_war_exploded/
+```bash
+./mvnw clean package
 ```
 
----
+### Windows
+
+```powershell
+mvnw.cmd clean package
+```
+
+Or, with Maven installed globally:
+
+```bash
+mvn clean package
+```
+
+## Deployment
+
+1. Configure Apache Tomcat 11 in your IDE or local environment.
+2. Deploy the generated WAR artifact.
+3. Start Tomcat.
+4. Open the application URL configured by your server.
+
+## Project Structure
+
+```text
+src/main/
+├── java/        # Java source code
+├── resources/   # JPA configuration and resources
+└── webapp/      # JSF pages and web resources
+```
+
+## Notes
+
+The UI intentionally uses JSF and custom CSS rather than PrimeFaces.
